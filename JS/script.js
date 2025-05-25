@@ -18,7 +18,7 @@ function addEducationField() {
     const newField = document.createElement('div');
     newField.className = 'education-item dynamic-field bg-gray-50 p-4 rounded-lg mb-3';
     newField.innerHTML = `
-                <div class="flex justify-between items-start">
+                <div class="flex space-around items-start">
                     <div class="w-3/4">
                         <input type="text" placeholder="Curso/Grau" class="education-course w-full px-3 py-1 border rounded mb-2">
                         <input type="text" placeholder="Instituição" class="education-institution w-full px-3 py-1 border rounded mb-2">
@@ -41,7 +41,7 @@ function addExperienceField() {
     const newField = document.createElement('div');
     newField.className = 'experience-item dynamic-field bg-gray-50 p-4 rounded-lg mb-3';
     newField.innerHTML = `
-                <div class="flex justify-between items-start">
+                <div class="flex space-around items-start">
                     <div class="w-3/4">
                         <input type="text" placeholder="Cargo" class="experience-position w-full px-3 py-1 border rounded mb-2">
                         <input type="text" placeholder="Empresa" class="experience-company w-full px-3 py-1 border rounded mb-2">
@@ -133,7 +133,7 @@ function generateResume() {
         if (course || institution || year) {
             const educationHTML = `
                         <div class="mb-4">
-                            <div class="flex justify-between">
+                            <div class="flex space-around">
                                 <h4 class="font-semibold text-gray-800">${course || 'Curso/Grau'}</h4>
                                 <span class="text-gray-500">${year || 'Ano'}</span>
                             </div>
@@ -163,7 +163,7 @@ function generateResume() {
         if (position || company || period) {
             const experienceHTML = `
                         <div class="mb-4">
-                            <div class="flex justify-between">
+                            <div class="flex space-around">
                                 <h4 class="font-semibold text-gray-800">${position || 'Cargo'}</h4>
                                 <span class="text-gray-500">${period || 'Período'}</span>
                             </div>
