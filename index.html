@@ -5,64 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Currículo Profissional</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="./CSS/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .resume-paper {
-            background: linear-gradient(to bottom, #f9f9f9 0%, #ffffff 100%);
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        .resume-paper::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 50px;
-            width: 2px;
-            height: 100%;
-            background: #e0e0e0;
-        }
-        .section-icon {
-            position: absolute;
-            left: -30px;
-            top: 0;
-            background: white;
-            border: 2px solid #3b82f6;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #3b82f6;
-        }
-        .dynamic-field {
-            transition: all 0.3s ease;
-        }
-        .dynamic-field:hover {
-            transform: translateY(-2px);
-        }
-        .print-area {
-            display: none;
-        }
-        @media print {
-            .no-print {
-                display: none;
-            }
-            .print-area {
-                display: block;
-            }
-            body {
-                background: white;
-                margin: 0;
-                padding: 0;
-            }
-            .resume-paper {
-                box-shadow: none;
-                margin: 0;
-                padding: 0;
-            }
-        }
-    </style>
+
 </head>
 <body class="bg-gray-100 font-sans">
     <div class="container mx-auto px-4 py-8">
