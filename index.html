@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Currículo Profissional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .resume-paper {
+            background: linear-gradient(to bottom, #f9f9f9 0%, #ffffff 100%);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .resume-paper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50px;
+            width: 2px;
+            height: 100%;
+            background: #e0e0e0;
+        }
+        .section-icon {
+            position: absolute;
+            left: -30px;
+            top: 0;
+            background: white;
+            border: 2px solid #3b82f6;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3b82f6;
+        }
+        .dynamic-field {
+            transition: all 0.3s ease;
+        }
+        .dynamic-field:hover {
+            transform: translateY(-2px);
+        }
+        .print-area {
+            display: none;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+            .print-area {
+                display: block;
+            }
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+            .resume-paper {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-blue-600 mb-2">
+                <i class="fas fa-file-alt mr-2"></i>Gerador de Currículo
+            </h1>
+            <p class="text-gray-600">Preencha os campos abaixo para criar seu currículo profissional</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Formulário -->
+            <div class="w-full lg:w-1/3 no-print">
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 text-blue-600">
+                        <i class="fas fa-user-circle mr-2"></i>Dados Pessoais
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-gray-700 mb-1">Nome Completo</label>
+                            <input type="text" id="fullName" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1">Profissão</label>
+                            <input type="text" id="profession" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1">Data de Nascimento</label>
+                            <input type="date" id="birthDate" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="calculateAge()">
+                            <p id="ageDisplay" class="text-sm text-gray-500 mt-1">Idade: <span id="age">-</span> anos</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1">E-mail</label>
+                            <input type="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1">Telefone</label>
+                            <input type="tel" id="phone" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1">Endereço</label>
+                            <input type="text" id="address" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1">LinkedIn</label>
+                            <input type="url" id="linkedin" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1">Sobre você</label>
+                            <textarea id="about" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 text-blue-600">
+                        <i class="fas fa-graduation-cap mr-2"></i>Formação Acadêmica
+                    </h2>
+                    <div id="education-container">
+                        <div class="education-item dynamic-field bg-gray-50 p-4 rounded-lg mb-3">
+                            <div class="flex justify-between items-start">
+                                <div class="w-3/4">
+                                    <input type="text" placeholder="Curso/Grau" class="education-course w-full px-3 py-1 border rounded mb-2">
+                                    <input type="text" placeholder="Instituição" class="education-institution w-full px-3 py-1 border rounded mb-2">
+                                </div>
+                                <div class="w-1/4 pl-2">
+                                    <input type="text" placeholder="Ano" class="education-year w-full px-3 py-1 border rounded">
+                                </div>
+                            </div>
+                            <textarea placeholder="Detalhes adicionais" class="education-details w-full px-3 py-1 border rounded mt-2" rows="2"></textarea>
+                            <button onclick="removeField(this)" class="mt-2 bg-red-100 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-200 transition">
+                                <i class="fas fa-trash mr-1"></i> Remover
+                            </button>
+                        </div>
+                    </div>
+                    <button onclick="addEducationField()" class="mt-2 bg-blue-100 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-200 transition">
+                        <i class="fas fa-plus mr-1"></i> Adicionar Formação
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 text-blue-600">
+                        <i class="fas fa-briefcase mr-2"></i>Experiência Profissional
+                    </h2>
+                    <div id="experience-container">
+                        <div class="experience-item dynamic-field bg-gray-50 p-4 rounded-lg mb-3">
+                            <div class="flex justify-between items-start">
+                                <div class="w-3/4">
+                                    <input type="text" placeholder="Cargo" class="experience-position w-full px-3 py-1 border rounded mb-2">
+                                    <input type="text" placeholder="Empresa" class="experience-company w-full px-3 py-1 border rounded mb-2">
+                                </div>
+                                <div class="w-1/4 pl-2">
+                                    <input type="text" placeholder="Período" class="experience-period w-full px-3 py-1 border rounded">
+                                </div>
+                            </div>
+                            <textarea placeholder="Descrição das atividades" class="experience-description w-full px-3 py-1 border rounded mt-2" rows="3"></textarea>
+                            <button onclick="removeField(this)" class="mt-2 bg-red-100 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-200 transition">
+                                <i class="fas fa-trash mr-1"></i> Remover
+                            </button>
+                        </div>
+                    </div>
+                    <button onclick="addExperienceField()" class="mt-2 bg-blue-100 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-200 transition">
+                        <i class="fas fa-plus mr-1"></i> Adicionar Experiência
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 text-blue-600">
+                        <i class="fas fa-tools mr-2"></i>Habilidades
+                    </h2>
+                    <div id="skills-container">
+                        <div class="skill-item dynamic-field flex items-center mb-2">
+                            <input type="text" placeholder="Habilidade" class="skill-name w-full px-3 py-1 border rounded mr-2">
+                            <select class="skill-level px-3 py-1 border rounded">
+                                <option value="1">Iniciante</option>
+                                <option value="2">Intermediário</option>
+                                <option value="3">Avançado</option>
+                                <option value="4">Especialista</option>
+                            </select>
+                            <button onclick="removeField(this)" class="ml-2 bg-red-100 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-200 transition">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button onclick="addSkillField()" class="mt-2 bg-blue-100 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-200 transition">
+                        <i class="fas fa-plus mr-1"></i> Adicionar Habilidade
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-xl font-semibold mb-4 text-blue-600">
+                        <i class="fas fa-language mr-2"></i>Idiomas
+                    </h2>
+                    <div id="languages-container">
+                        <div class="language-item dynamic-field flex items-center mb-2">
+                            <input type="text" placeholder="Idioma" class="language-name w-1/2 px-3 py-1 border rounded mr-2">
+                            <select class="language-level w-1/2 px-3 py-1 border rounded">
+                                <option value="Básico">Básico</option>
+                                <option value="Intermediário">Intermediário</option>
+                                <option value="Avançado">Avançado</option>
+                                <option value="Fluente">Fluente</option>
+                                <option value="Nativo">Nativo</option>
+                            </select>
+                            <button onclick="removeField(this)" class="ml-2 bg-red-100 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-200 transition">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button onclick="addLanguageField()" class="mt-2 bg-blue-100 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-200 transition">
+                        <i class="fas fa-plus mr-1"></i> Adicionar Idioma
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold mb-4 text-blue-600">
+                        <i class="fas fa-star mr-2"></i>Informações Adicionais
+                    </h2>
+                    <textarea id="additionalInfo" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="4" placeholder="Prêmios, certificações, projetos relevantes, etc."></textarea>
+                </div>
+
+                <div class="mt-6 flex justify-between">
+                    <button onclick="generateResume()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition flex items-center">
+                        <i class="fas fa-file-pdf mr-2"></i> Gerar Currículo
+                    </button>
+                    <button onclick="printResume()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition flex items-center">
+                        <i class="fas fa-print mr-2"></i> Imprimir
+                    </button>
+                    <button onclick="resetForm()" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition flex items-center">
+                        <i class="fas fa-redo mr-2"></i> Limpar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Visualização do Currículo -->
+            <div class="w-full lg:w-2/3">
+                <div class="sticky top-4">
+                    <div class="bg-white resume-paper p-8 rounded-lg mb-4 print-area" id="resume-preview">
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <h1 id="resume-name" class="text-3xl font-bold text-gray-800">Seu Nome</h1>
+                                <h2 id="resume-profession" class="text-xl text-blue-600">Sua Profissão</h2>
+                                <p id="resume-age" class="text-gray-500 text-sm">Idade: - anos</p>
+                            </div>
+                            <div class="text-right">
+                                <p id="resume-phone" class="text-gray-600"><i class="fas fa-phone mr-2"></i>(00) 00000-0000</p>
+                                <p id="resume-email" class="text-gray-600"><i class="fas fa-envelope mr-2"></i>seu@email.com</p>
+                                <p id="resume-address" class="text-gray-600"><i class="fas fa-map-marker-alt mr-2"></i>Sua Cidade, Estado</p>
+                                <p id="resume-linkedin" class="text-gray-600"><i class="fab fa-linkedin mr-2"></i>linkedin.com/in/seu-perfil</p>
+                            </div>
+                        </div>
+
+                        <div class="mb-8 relative pl-16">
+                            <div class="section-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold border-b border-gray-200 pb-2 mb-4 text-gray-700">Sobre</h3>
+                            <p id="resume-about" class="text-gray-600">Breve descrição sobre você e seus objetivos profissionais.</p>
+                        </div>
+
+                        <div class="mb-8 relative pl-16">
+                            <div class="section-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold border-b border-gray-200 pb-2 mb-4 text-gray-700">Formação Acadêmica</h3>
+                            <div id="resume-education">
+                                <div class="mb-4">
+                                    <div class="flex justify-between">
+                                        <h4 class="font-semibold text-gray-800">Curso/Grau</h4>
+                                        <span class="text-gray-500">Ano</span>
+                                    </div>
+                                    <p class="text-gray-600">Instituição de Ensino</p>
+                                    <p class="text-gray-500 text-sm mt-1">Detalhes adicionais sobre a formação</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-8 relative pl-16">
+                            <div class="section-icon">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold border-b border-gray-200 pb-2 mb-4 text-gray-700">Experiência Profissional</h3>
+                            <div id="resume-experience">
+                                <div class="mb-4">
+                                    <div class="flex justify-between">
+                                        <h4 class="font-semibold text-gray-800">Cargo</h4>
+                                        <span class="text-gray-500">Período</span>
+                                    </div>
+                                    <p class="text-gray-600">Empresa</p>
+                                    <p class="text-gray-500 text-sm mt-1">Descrição detalhada das atividades realizadas</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-8 relative pl-16">
+                            <div class="section-icon">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold border-b border-gray-200 pb-2 mb-4 text-gray-700">Habilidades</h3>
+                            <div id="resume-skills" class="flex flex-wrap gap-2">
+                                <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">Habilidade (Nível)</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-8 relative pl-16">
+                            <div class="section-icon">
+                                <i class="fas fa-language"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold border-b border-gray-200 pb-2 mb-4 text-gray-700">Idiomas</h3>
+                            <div id="resume-languages">
+                                <p class="text-gray-600">Idioma: Nível</p>
+                            </div>
+                        </div>
+
+                        <div class="relative pl-16">
+                            <div class="section-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold border-b border-gray-200 pb-2 mb-4 text-gray-700">Informações Adicionais</h3>
+                            <div id="resume-additional" class="text-gray-600">
+                                <p>Prêmios, certificações, projetos relevantes, etc.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-md p-4 text-center no-print">
+                        <p class="text-gray-600">Preencha o formulário ao lado para visualizar seu currículo aqui</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Calcular idade automaticamente
+        function calculateAge() {
+            const birthDate = new Date(document.getElementById('birthDate').value);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            document.getElementById('age').textContent = age;
+        }
+
+        // Adicionar campos de formação
+        function addEducationField() {
+            const container = document.getElementById('education-container');
+            const newField = document.createElement('div');
+            newField.className = 'education-item dynamic-field bg-gray-50 p-4 rounded-lg mb-3';
+            newField.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div class="w-3/4">
+                        <input type="text" placeholder="Curso/Grau" class="education-course w-full px-3 py-1 border rounded mb-2">
+                        <input type="text" placeholder="Instituição" class="education-institution w-full px-3 py-1 border rounded mb-2">
+                    </div>
+                    <div class="w-1/4 pl-2">
+                        <input type="text" placeholder="Ano" class="education-year w-full px-3 py-1 border rounded">
+                    </div>
+                </div>
+                <textarea placeholder="Detalhes adicionais" class="education-details w-full px-3 py-1 border rounded mt-2" rows="2"></textarea>
+                <button onclick="removeField(this)" class="mt-2 bg-red-100 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-200 transition">
+                    <i class="fas fa-trash mr-1"></i> Remover
+                </button>
+            `;
+            container.appendChild(newField);
+        }
+
+        // Adicionar campos de experiência
+        function addExperienceField() {
+            const container = document.getElementById('experience-container');
+            const newField = document.createElement('div');
+            newField.className = 'experience-item dynamic-field bg-gray-50 p-4 rounded-lg mb-3';
+            newField.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div class="w-3/4">
+                        <input type="text" placeholder="Cargo" class="experience-position w-full px-3 py-1 border rounded mb-2">
+                        <input type="text" placeholder="Empresa" class="experience-company w-full px-3 py-1 border rounded mb-2">
+                    </div>
+                    <div class="w-1/4 pl-2">
+                        <input type="text" placeholder="Período" class="experience-period w-full px-3 py-1 border rounded">
+                    </div>
+                </div>
+                <textarea placeholder="Descrição das atividades" class="experience-description w-full px-3 py-1 border rounded mt-2" rows="3"></textarea>
+                <button onclick="removeField(this)" class="mt-2 bg-red-100 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-200 transition">
+                    <i class="fas fa-trash mr-1"></i> Remover
+                </button>
+            `;
+            container.appendChild(newField);
+        }
+
+        // Adicionar campos de habilidades
+        function addSkillField() {
+            const container = document.getElementById('skills-container');
+            const newField = document.createElement('div');
+            newField.className = 'skill-item dynamic-field flex items-center mb-2';
+            newField.innerHTML = `
+                <input type="text" placeholder="Habilidade" class="skill-name w-full px-3 py-1 border rounded mr-2">
+                <select class="skill-level px-3 py-1 border rounded">
+                    <option value="1">Iniciante</option>
+                    <option value="2">Intermediário</option>
+                    <option value="3">Avançado</option>
+                    <option value="4">Especialista</option>
+                </select>
+                <button onclick="removeField(this)" class="ml-2 bg-red-100 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-200 transition">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            container.appendChild(newField);
+        }
+
+        // Adicionar campos de idiomas
+        function addLanguageField() {
+            const container = document.getElementById('languages-container');
+            const newField = document.createElement('div');
+            newField.className = 'language-item dynamic-field flex items-center mb-2';
+            newField.innerHTML = `
+                <input type="text" placeholder="Idioma" class="language-name w-1/2 px-3 py-1 border rounded mr-2">
+                <select class="language-level w-1/2 px-3 py-1 border rounded">
+                    <option value="Básico">Básico</option>
+                    <option value="Intermediário">Intermediário</option>
+                    <option value="Avançado">Avançado</option>
+                    <option value="Fluente">Fluente</option>
+                    <option value="Nativo">Nativo</option>
+                </select>
+                <button onclick="removeField(this)" class="ml-2 bg-red-100 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-200 transition">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            container.appendChild(newField);
+        }
+
+        // Remover campos
+        function removeField(button) {
+            const field = button.closest('.dynamic-field');
+            if (field) {
+                field.remove();
+            }
+        }
+
+        // Gerar o currículo
+        function generateResume() {
+            // Dados pessoais
+            document.getElementById('resume-name').textContent = document.getElementById('fullName').value || 'Seu Nome';
+            document.getElementById('resume-profession').textContent = document.getElementById('profession').value || 'Sua Profissão';
+            document.getElementById('resume-age').textContent = `Idade: ${document.getElementById('age').textContent || '-'} anos`;
+            document.getElementById('resume-phone').innerHTML = `<i class="fas fa-phone mr-2"></i>${document.getElementById('phone').value || '(00) 00000-0000'}`;
+            document.getElementById('resume-email').innerHTML = `<i class="fas fa-envelope mr-2"></i>${document.getElementById('email').value || 'seu@email.com'}`;
+            document.getElementById('resume-address').innerHTML = `<i class="fas fa-map-marker-alt mr-2"></i>${document.getElementById('address').value || 'Sua Cidade, Estado'}`;
+            document.getElementById('resume-linkedin').innerHTML = `<i class="fab fa-linkedin mr-2"></i>${document.getElementById('linkedin').value || 'linkedin.com/in/seu-perfil'}`;
+            document.getElementById('resume-about').textContent = document.getElementById('about').value || 'Breve descrição sobre você e seus objetivos profissionais.';
+
+            // Formação acadêmica
+            const educationContainer = document.getElementById('resume-education');
+            educationContainer.innerHTML = '';
+            
+            const educationItems = document.querySelectorAll('.education-item');
+            educationItems.forEach(item => {
+                const course = item.querySelector('.education-course').value;
+                const institution = item.querySelector('.education-institution').value;
+                const year = item.querySelector('.education-year').value;
+                const details = item.querySelector('.education-details').value;
+                
+                if (course || institution || year) {
+                    const educationHTML = `
+                        <div class="mb-4">
+                            <div class="flex justify-between">
+                                <h4 class="font-semibold text-gray-800">${course || 'Curso/Grau'}</h4>
+                                <span class="text-gray-500">${year || 'Ano'}</span>
+                            </div>
+                            <p class="text-gray-600">${institution || 'Instituição de Ensino'}</p>
+                            ${details ? `<p class="text-gray-500 text-sm mt-1">${details}</p>` : ''}
+                        </div>
+                    `;
+                    educationContainer.innerHTML += educationHTML;
+                }
+            });
+
+            if (educationContainer.innerHTML === '') {
+                educationContainer.innerHTML = '<p class="text-gray-600">Nenhuma formação acadêmica informada</p>';
+            }
+
+            // Experiência profissional
+            const experienceContainer = document.getElementById('resume-experience');
+            experienceContainer.innerHTML = '';
+            
+            const experienceItems = document.querySelectorAll('.experience-item');
+            experienceItems.forEach(item => {
+                const position = item.querySelector('.experience-position').value;
+                const company = item.querySelector('.experience-company').value;
+                const period = item.querySelector('.experience-period').value;
+                const description = item.querySelector('.experience-description').value;
+                
+                if (position || company || period) {
+                    const experienceHTML = `
+                        <div class="mb-4">
+                            <div class="flex justify-between">
+                                <h4 class="font-semibold text-gray-800">${position || 'Cargo'}</h4>
+                                <span class="text-gray-500">${period || 'Período'}</span>
+                            </div>
+                            <p class="text-gray-600">${company || 'Empresa'}</p>
+                            ${description ? `<p class="text-gray-500 text-sm mt-1">${description}</p>` : ''}
+                        </div>
+                    `;
+                    experienceContainer.innerHTML += experienceHTML;
+                }
+            });
+
+            if (experienceContainer.innerHTML === '') {
+                experienceContainer.innerHTML = '<p class="text-gray-600">Nenhuma experiência profissional informada</p>';
+            }
+
+            // Habilidades
+            const skillsContainer = document.getElementById('resume-skills');
+            skillsContainer.innerHTML = '';
+            
+            const skillItems = document.querySelectorAll('.skill-item');
+            skillItems.forEach(item => {
+                const name = item.querySelector('.skill-name').value;
+                const level = item.querySelector('.skill-level').value;
+                const levelText = ['', 'Iniciante', 'Intermediário', 'Avançado', 'Especialista'][level];
+                
+                if (name) {
+                    const skillHTML = `<span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">${name} (${levelText})</span>`;
+                    skillsContainer.innerHTML += skillHTML;
+                }
+            });
+
+            if (skillsContainer.innerHTML === '') {
+                skillsContainer.innerHTML = '<p class="text-gray-600">Nenhuma habilidade informada</p>';
+            }
+
+            // Idiomas
+            const languagesContainer = document.getElementById('resume-languages');
+            languagesContainer.innerHTML = '';
+            
+            const languageItems = document.querySelectorAll('.language-item');
+            languageItems.forEach(item => {
+                const name = item.querySelector('.language-name').value;
+                const level = item.querySelector('.language-level').value;
+                
+                if (name) {
+                    const languageHTML = `<p class="text-gray-600">${name}: ${level}</p>`;
+                    languagesContainer.innerHTML += languageHTML;
+                }
+            });
+
+            if (languagesContainer.innerHTML === '') {
+                languagesContainer.innerHTML = '<p class="text-gray-600">Nenhum idioma informado</p>';
+            }
+
+            // Informações adicionais
+            const additionalInfo = document.getElementById('additionalInfo').value;
+            document.getElementById('resume-additional').innerHTML = additionalInfo ? `<p>${additionalInfo}</p>` : '<p>Prêmios, certificações, projetos relevantes, etc.</p>';
+
+            // Mostrar a visualização
+            document.querySelector('.print-area').style.display = 'block';
+            document.querySelector('.no-print + .bg-white.rounded-lg').style.display = 'none';
+        }
+
+        // Imprimir o currículo
+        function printResume() {
+            generateResume();
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        }
+
+        // Limpar o formulário
+        function resetForm() {
+            document.querySelectorAll('input, textarea').forEach(element => {
+                element.value = '';
+            });
+            
+            const containers = ['education-container', 'experience-container', 'skills-container', 'languages-container'];
+            containers.forEach(id => {
+                const container = document.getElementById(id);
+                container.innerHTML = '';
+                
+                if (id === 'education-container' || id === 'experience-container') {
+                    if (id === 'education-container') addEducationField();
+                    if (id === 'experience-container') addExperienceField();
+                } else {
+                    if (id === 'skills-container') addSkillField();
+                    if (id === 'languages-container') addLanguageField();
+                }
+            });
+            
+            document.getElementById('age').textContent = '-';
+            
+            document.querySelector('.print-area').style.display = 'none';
+            document.querySelector('.no-print + .bg-white.rounded-lg').style.display = 'block';
+        }
+
+        // Inicializar com um campo em cada seção
+        window.onload = function() {
+            addEducationField();
+            addExperienceField();
+            addSkillField();
+            addLanguageField();
+        };
+    </script>
+</body>
+</html>
