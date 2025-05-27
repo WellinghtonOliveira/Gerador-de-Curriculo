@@ -268,3 +268,5 @@ window.onload = function () {
     addSkillField();
     addLanguageField();
 };
+
+// TODO lembre de atualizar e organizar melhor o space-around
