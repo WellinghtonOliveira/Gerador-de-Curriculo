@@ -224,7 +224,11 @@ function generateResume() {
 
     // Mostrar a visualização
     document.querySelector('.print-area').style.display = 'block';
-    document.querySelector('.no-print + .bg-white.rounded-lg').style.display = 'none';
+    const elem = document.querySelector('.no-print + .bg-white.rounded-lg');
+    if (elem) {
+        elem.style.display = 'none';
+    }
+
 }
 
 // Imprimir o currículo
