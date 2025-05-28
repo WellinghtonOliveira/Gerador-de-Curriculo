@@ -10,6 +10,7 @@
     top: 0;
     left: 50px;
     width: 2px;
+    margin-left: 20px;
     height: 100%;
     background: #e0e0e0;
 }
@@ -27,6 +28,7 @@
     align-items: center;
     justify-content: center;
     color: #3b82f6;
+    margin: 0 10px;
 }
 
 .dynamic-field {
