@@ -108,7 +108,7 @@ function removeField(button) {
 }
 
 // Gerar o currículo
-function generateResume() {
+function generateResume(printTrue) {
     // Dados pessoais
     document.getElementById('resume-name').textContent = document.getElementById('fullName').value || 'Seu Nome';
     document.getElementById('resume-profession').textContent = document.getElementById('profession').value || 'Sua Profissão';
@@ -224,16 +224,15 @@ function generateResume() {
 
     // Mostrar a visualização
     document.querySelector('.print-area').style.display = 'block';
-    const elem = document.querySelector('.no-print + .bg-white.rounded-lg');
-    if (elem) {
-        elem.style.display = 'none';
+    if (printTrue) {
+        document.querySelectorAll('.no-print')
     }
 
 }
 
 // Imprimir o currículo
 function printResume() {
-    generateResume();
+    generateResume(true);
     setTimeout(() => {
         window.print();
     }, 500);
