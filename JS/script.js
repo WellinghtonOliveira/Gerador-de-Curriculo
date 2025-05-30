@@ -225,7 +225,15 @@ function generateResume(printTrue) {
     // Mostrar a visualização
     document.querySelector('.print-area').style.display = 'block';
     if (printTrue) {
-        document.querySelectorAll('.no-print')
+        const noPrint = document.querySelectorAll('.no-print')
+        const tela = document.querySelector('#printTel')
+
+        noPrint.forEach((el) => {
+            el.style.display = 'none'
+        })
+
+        tela.style.justifyContent = 'center'
+
     }
 
 }
