@@ -158,4 +158,190 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php else: ?>
     <!-- Formulário para preencher -->
-    <h1
+    <h1 class="text-4xl font-bold text-center text-gray-700 mb-12">Gerador de Currículo Profissional</h1>
+    <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST" class="bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto space-y-6">
+        <!-- Dados básicos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="fullName" class="block text-gray-700 font-semibold mb-1">Nome Completo</label>
+                <input required type="text" id="fullName" name="fullName" placeholder="Seu nome completo" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div>
+                <label for="profession" class="block text-gray-700 font-semibold mb-1">Profissão</label>
+                <input required type="text" id="profession" name="profession" placeholder="Sua profissão" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label for="birthDate" class="block text-gray-700 font-semibold mb-1">Data de Nascimento</label>
+                <input type="date" id="birthDate" name="birthDate" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div>
+                <label for="email" class="block text-gray-700 font-semibold mb-1">E-mail</label>
+                <input type="email" id="email" name="email" placeholder="seu@email.com" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div>
+                <label for="phone" class="block text-gray-700 font-semibold mb-1">Telefone</label>
+                <input type="tel" id="phone" name="phone" placeholder="(00) 00000-0000" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+        </div>
+
+        <div>
+            <label for="address" class="block text-gray-700 font-semibold mb-1">Endereço</label>
+            <input type="text" id="address" name="address" placeholder="Rua, Número, Bairro, Cidade" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+
+        <div>
+            <label for="linkedin" class="block text-gray-700 font-semibold mb-1">LinkedIn</label>
+            <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/seu-perfil" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+
+        <div>
+            <label for="about" class="block text-gray-700 font-semibold mb-1">Sobre</label>
+            <textarea id="about" name="about" rows="4" placeholder="Fale sobre você e seus objetivos profissionais" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+
+        <!-- Campos dinâmicos: Formação -->
+        <div id="educationContainer" class="mb-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">Formação Acadêmica</h2>
+            <div class="education-entry space-y-4 mb-4 border p-4 rounded bg-gray-50">
+                <input type="text" name="education[0][course]" placeholder="Curso" class="w-full border border-gray-300 rounded px-3 py-2" />
+                <input type="text" name="education[0][institution]" placeholder="Instituição" class="w-full border border-gray-300 rounded px-3 py-2 mt-2" />
+                <input type="text" name="education[0][year]" placeholder="Ano de Conclusão" class="w-full border border-gray-300 rounded px-3 py-2 mt-2" />
+                <textarea name="education[0][details]" placeholder="Descrição (opcional)" class="w-full border border-gray-300 rounded px-3 py-2 mt-2"></textarea>
+            </div>
+        </div>
+        <button type="button" id="addEducation" class="mb-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">+ Adicionar Formação</button>
+
+        <!-- Campos dinâmicos: Experiência -->
+        <div id="experienceContainer" class="mb-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">Experiência Profissional</h2>
+            <div class="experience-entry space-y-4 mb-4 border p-4 rounded bg-gray-50">
+                <input type="text" name="experience[0][position]" placeholder="Cargo" class="w-full border border-gray-300 rounded px-3 py-2" />
+                <input type="text" name="experience[0][company]" placeholder="Empresa" class="w-full border border-gray-300 rounded px-3 py-2 mt-2" />
+                <input type="text" name="experience[0][period]" placeholder="Período (ex: Jan 2020 - Dez 2022)" class="w-full border border-gray-300 rounded px-3 py-2 mt-2" />
+                <textarea name="experience[0][description]" placeholder="Descrição das atividades" class="w-full border border-gray-300 rounded px-3 py-2 mt-2"></textarea>
+            </div>
+        </div>
+        <button type="button" id="addExperience" class="mb-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">+ Adicionar Experiência</button>
+
+        <!-- Campos dinâmicos: Habilidades -->
+        <div id="skillsContainer" class="mb-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">Habilidades</h2>
+            <div class="skills-entry flex gap-4 mb-4">
+                <input type="text" name="skills[0][name]" placeholder="Habilidade" class="border border-gray-300 rounded px-3 py-2 flex-grow" />
+                <select name="skills[0][level]" class="border border-gray-300 rounded px-3 py-2 w-40">
+                    <option value="">Nível</option>
+                    <option value="Básico">Básico</option>
+                    <option value="Intermediário">Intermediário</option>
+                    <option value="Avançado">Avançado</option>
+                    <option value="Expert">Expert</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" id="addSkill" class="mb-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">+ Adicionar Habilidade</button>
+
+        <!-- Campos dinâmicos: Idiomas -->
+        <div id="languagesContainer" class="mb-6">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">Idiomas</h2>
+            <div class="languages-entry flex gap-4 mb-4">
+                <input type="text" name="languages[0][name]" placeholder="Idioma" class="border border-gray-300 rounded px-3 py-2 flex-grow" />
+                <select name="languages[0][level]" class="border border-gray-300 rounded px-3 py-2 w-40">
+                    <option value="">Nível</option>
+                    <option value="Básico">Básico</option>
+                    <option value="Intermediário">Intermediário</option>
+                    <option value="Avançado">Avançado</option>
+                    <option value="Fluente">Fluente</option>
+                    <option value="Nativo">Nativo</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" id="addLanguage" class="mb-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">+ Adicionar Idioma</button>
+
+        <div>
+            <label for="additionalInfo" class="block text-gray-700 font-semibold mb-1">Informações Adicionais</label>
+            <textarea id="additionalInfo" name="additionalInfo" rows="4" placeholder="Prêmios, certificações, projetos, etc." class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+
+        <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition flex items-center justify-center">
+            <i class="fas fa-file-pdf mr-2"></i> Gerar Currículo
+        </button>
+    </form>
+<?php endif; ?>
+
+</div>
+
+<script>
+// Função para duplicar campos dinâmicos (formação, experiência, habilidades, idiomas)
+
+function addEntry(containerId, entryClass, templateHTML) {
+    const container = document.getElementById(containerId);
+    const count = container.querySelectorAll(`.${entryClass}`).length;
+    const newIndex = count;
+    const newEntry = document.createElement('div');
+    newEntry.classList.add(entryClass);
+    newEntry.classList.add('mb-4');
+    newEntry.classList.add('border');
+    newEntry.classList.add('p-4');
+    newEntry.classList.add('rounded');
+    newEntry.classList.add('bg-gray-50');
+
+    // Ajusta os nomes dos inputs para o índice correto
+    newEntry.innerHTML = templateHTML.replace(/\[0\]/g, `[${newIndex}]`);
+
+    container.appendChild(newEntry);
+}
+
+document.getElementById('addEducation').addEventListener('click', () => {
+    const template = `
+        <input type="text" name="education[0][course]" placeholder="Curso" class="w-full border border-gray-300 rounded px-3 py-2" />
+        <input type="text" name="education[0][institution]" placeholder="Instituição" class="w-full border border-gray-300 rounded px-3 py-2 mt-2" />
+        <input type="text" name="education[0][year]" placeholder="Ano de Conclusão" class="w-full border border-gray-300 rounded px-3 py-2 mt-2" />
+        <textarea name="education[0][details]" placeholder="Descrição (opcional)" class="w-full border border-gray-300 rounded px-3 py-2 mt-2"></textarea>
+    `;
+    addEntry('educationContainer', 'education-entry', template);
+});
+
+document.getElementById('addExperience').addEventListener('click', () => {
+    const template = `
+        <input type="text" name="experience[0][position]" placeholder="Cargo" class="w-full border border-gray-300 rounded px-3 py-2" />
+        <input type="text" name="experience[0][company]" placeholder="Empresa" class="w-full border border-gray-300 rounded px-3 py-2 mt-2" />
+        <input type="text" name="experience[0][period]" placeholder="Período (ex: Jan 2020 - Dez 2022)" class="w-full border border-gray-300 rounded px-3 py-2 mt-2" />
+        <textarea name="experience[0][description]" placeholder="Descrição das atividades" class="w-full border border-gray-300 rounded px-3 py-2 mt-2"></textarea>
+    `;
+    addEntry('experienceContainer', 'experience-entry', template);
+});
+
+document.getElementById('addSkill').addEventListener('click', () => {
+    const template = `
+        <input type="text" name="skills[0][name]" placeholder="Habilidade" class="border border-gray-300 rounded px-3 py-2 flex-grow" />
+        <select name="skills[0][level]" class="border border-gray-300 rounded px-3 py-2 w-40">
+            <option value="">Nível</option>
+            <option value="Básico">Básico</option>
+            <option value="Intermediário">Intermediário</option>
+            <option value="Avançado">Avançado</option>
+            <option value="Expert">Expert</option>
+        </select>
+    `;
+    addEntry('skillsContainer', 'skills-entry', template);
+});
+
+document.getElementById('addLanguage').addEventListener('click', () => {
+    const template = `
+        <input type="text" name="languages[0][name]" placeholder="Idioma" class="border border-gray-300 rounded px-3 py-2 flex-grow" />
+        <select name="languages[0][level]" class="border border-gray-300 rounded px-3 py-2 w-40">
+            <option value="">Nível</option>
+            <option value="Básico">Básico</option>
+            <option value="Intermediário">Intermediário</option>
+            <option value="Avançado">Avançado</option>
+            <option value="Fluente">Fluente</option>
+            <option value="Nativo">Nativo</option>
+        </select>
+    `;
+    addEntry('languagesContainer', 'languages-entry', template);
+});
+</script>
+
+</body>
+</html>
