@@ -47,9 +47,12 @@
     .no-print {
         display: none;
     }
-
     .print-area {
         display: block;
+    }
+
+    .resume-paper::before {
+        display: none;
     }
 
     body {
